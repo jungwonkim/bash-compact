@@ -1,0 +1,10 @@
+startup_message off
+shell bash
+vbell off
+msgwait 1
+hardstatus alwayslastline
+defscrollback 10000
+termcapinfo xterm* ti@:te@
+altscreen on
+bind x
+hardstatus string "%{= Yk}%{+b} %{= Kw}%{-b W} %-Lw%{= bW}%n%f %t%{-}%+Lw"
