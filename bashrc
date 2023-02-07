@@ -41,4 +41,4 @@ alias tf='tail -f'
 alias u='cd ..'
 alias p='cd ..; clear; ls -l'
 
-test -s bashrc.machine && . bashrc.machine || true
+test -s .bashrc.machine && . .bashrc.machine || true
