@@ -42,3 +42,5 @@ alias tf='tail -f'
 alias p='cd ..; clear; ls -l'
 
 test -s .bashrc.machine && . .bashrc.machine || true
+
+export PS1='\[\033[01;32m\]\h\[\033[00m\]:\[\033[01;38;5;208m\]\w\[\033[00m\]\$ '
