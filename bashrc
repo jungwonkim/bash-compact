@@ -1,5 +1,5 @@
 export BASH_SILENCE_DEPRECATION_WARNING=1
-export TERM='screen-256color'
+export TERM='xterm-256color'
 export LANG='C.UTF-8'
 export HISTSIZE=1024
 export HISTTIMEFORMAT='%F %T '
@@ -29,6 +29,7 @@ alias sc='screen -U'
 alias v='vim'
 alias vi='vim'
 alias iv='vim'
+alias z='tar zxvf'
 alias ls='ls --color=auto'
 alias l='ls -l'
 alias ll='ls -al'
@@ -38,7 +39,6 @@ alias lc='clear; ls -l'
 alias cls='clear; ls'
 alias grep='grep --colour=auto'
 alias tf='tail -f'
-alias u='cd ..'
 alias p='cd ..; clear; ls -l'
 
 test -s .bashrc.machine && . .bashrc.machine || true
