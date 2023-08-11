@@ -5,6 +5,7 @@ export HISTSIZE=1024
 export HISTTIMEFORMAT='%F %T '
 export HISTIGNORE="c:l:ls:ll:lc:cl:p:history:cd:u:m:mc:mcm"
 export GPG_TTY=$(tty)
+unset LS_COLORS
 
 alias a='alias'
 alias c='clear'
