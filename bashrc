@@ -1,7 +1,8 @@
 export BASH_SILENCE_DEPRECATION_WARNING=1
 export TERM='xterm-256color'
-export LANG='C.UTF-8'
-export HISTSIZE=1024
+export LC_ALL='en_US.UTF-8'
+export LANG='en_US.UTF-8'
+export HISTSIZE=8192
 export HISTTIMEFORMAT='%F %T '
 export HISTIGNORE="c:l:ls:ll:lc:cl:p:history:cd:u:m:mc:mcm"
 export GPG_TTY=$(tty)
