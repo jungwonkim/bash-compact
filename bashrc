@@ -1,7 +1,7 @@
 export BASH_SILENCE_DEPRECATION_WARNING=1
 export TERM='xterm-256color'
-export LC_ALL='en_US.UTF-8'
-export LANG='en_US.UTF-8'
+export LC_ALL='C'
+export LANG='C'
 export HISTSIZE=8192
 export HISTTIMEFORMAT='%F %T '
 export HISTIGNORE="c:l:ls:ll:lc:cl:p:history:cd:u:m:mc:mcm"
