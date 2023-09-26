@@ -9,6 +9,7 @@ export GPG_TTY=$(tty)
 unset LS_COLORS
 
 alias a='alias'
+alias clear='clear -x'
 alias c='clear'
 alias ccd='cd'
 alias h='hostname'
