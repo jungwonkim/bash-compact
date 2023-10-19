@@ -46,7 +46,11 @@ alias p='cd ..; clear; ls -l'
 
 test -s .bashrc.machine && . .bashrc.machine || true
 
+if [ $HOSTNAME ]; then
+export PS1='\[\033[01;30m\]$HOSTNAME\[\033[00m\]:\[\033[01;38;5;208m\]\w\[\033[00m\]\$ '
+else
 export PS1='\[\033[01;32m\]\h\[\033[00m\]:\[\033[01;38;5;208m\]\w\[\033[00m\]\$ '
+fi
 
 color256() {
 for i in {0..255}
