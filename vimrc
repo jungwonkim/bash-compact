@@ -30,6 +30,7 @@ let fortran_do_enddo=1
 au BufRead,BufNewFile *.ptx setfiletype asm
 
 autocmd Filetype make setlocal noexpandtab
+autocmd FileType python setlocal tabstop=2 shiftwidth=2 softtabstop=2 expandtab
 
 nnoremap t gt
 nnoremap T gT

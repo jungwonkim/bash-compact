@@ -1,10 +1,12 @@
 export BASH_SILENCE_DEPRECATION_WARNING=1
 export TERM='xterm-256color'
-export LC_ALL='C'
-export LANG='C'
+#export LC_ALL='en_US.UTF-8'
+#export LC_ALL='C'
+#export LANG='C'
 export HISTSIZE=8192
 export HISTTIMEFORMAT='%F %T '
 export HISTIGNORE="c:l:ls:ll:lc:cl:p:history:cd:u:m:mc:mcm"
+export HISTCONTROL=ignoredups
 export GPG_TTY=$(tty)
 unset LS_COLORS
 
@@ -21,6 +23,7 @@ alias mc='make clean'
 alias mcm='make clean; make'
 alias mi='make -j install'
 alias mj='make -j'
+alias mr='make run'
 alias mv1='make VERBOSE=1'
 alias g='git'
 alias gl='git log --oneline --decorate --all --graph'
@@ -36,6 +39,7 @@ alias z='tar zxvf'
 alias ls='ls --color=auto'
 alias l='ls -l'
 alias ll='ls -al'
+alias lt='ls -altrh'
 alias lns='ln -nfs'
 alias cl='clear; ls -l'
 alias lc='clear; ls -l'
@@ -43,6 +47,10 @@ alias cls='clear; ls'
 alias grep='grep --colour=auto'
 alias tf='tail -f'
 alias p='cd ..; clear; ls -l'
+alias ssh8='ssh -L 8888:localhost:8888'
+alias rp='cd $(realpath .)'
+alias shortps1='export PROMPT_DIRTRIM=3'
+alias condainit='source ~/scratch/miniconda3/etc/profile.d/conda.sh && conda activate'
 
 test -s .bashrc.machine && . .bashrc.machine || true
 
@@ -51,6 +59,22 @@ export PS1='\[\033[01;30m\]${HOSTNAME%%.*}\[\033[00m\]:\[\033[01;38;5;208m\]\w\[
 else
 export PS1='\[\033[01;32m\]\h\[\033[00m\]:\[\033[01;38;5;208m\]\w\[\033[00m\]\$ '
 fi
+
+p2() {
+for i in {0..63}
+do
+  printf "%2u : %u 0x%x\n" "$i" "$((1 << $i))" "$((1 << $i))"
+done
+}
+
+sw() {
+s=0
+while [[ 1 ]]; do
+  echo $s "secs"
+  sleep 1
+  s=$[$s+1];
+done
+}
 
 color256() {
 for i in {0..255}
@@ -76,5 +100,13 @@ awk 'BEGIN{
   }
 printf "\n";
 }'
+}
+
+gi() {
+  if [[ $1 == "tpush" ]]; then
+    git push "${@:2}"
+  elif [[ $1 == "tpull" ]]; then
+    git pull "${@:2}"
+  fi
 }
 
