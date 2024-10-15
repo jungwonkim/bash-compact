@@ -1,26 +1,30 @@
+unset LANG
+unset LC_ALL
+
 export BASH_SILENCE_DEPRECATION_WARNING=1
 export TERM='xterm-256color'
-#export LC_ALL='en_US.UTF-8'
-#export LC_ALL='C'
-#export LANG='C'
 export HISTSIZE=8192
 export HISTTIMEFORMAT='%F %T '
 export HISTIGNORE="c:l:ls:ll:lc:cl:p:history:cd:u:m:mc:mcm"
 export HISTCONTROL=ignoredups
 export GPG_TTY=$(tty)
-unset LS_COLORS
+export LS_COLORS="ow=01;34;04"
+export HOST=$(hostname -s)
+export ARCH=$(arch)
 
 alias a='alias'
 alias clear='clear -x'
 alias c='clear'
 alias ccd='cd'
-alias h='hostname'
+alias d='cd'
+alias f='file'
+alias h='history'
 alias rm='rm -i'
-alias t='top'
-alias x='cat'
+alias t='type'
+alias x="awk '{printf \"\\033[31m%-6s\\033[0m %s\\n\", NR, \$0}'"
 alias m='make'
 alias mc='make clean'
-alias mcm='make clean; make'
+alias mcm='make clean && make'
 alias mi='make -j install'
 alias mj='make -j'
 alias mr='make run'
@@ -35,27 +39,32 @@ alias sc='screen -U'
 alias v='vim'
 alias vi='vim'
 alias iv='vim'
+alias ni='nvim'
+alias in='nvim'
 alias z='tar zxvf'
 alias ls='ls --color=auto'
 alias l='ls -l'
 alias ll='ls -al'
+alias lll='ls -alh'
 alias lt='ls -altrh'
-alias lns='ln -nfs'
-alias cl='clear; ls -l'
-alias lc='clear; ls -l'
-alias cls='clear; ls'
+alias lT='ls -alth'
+alias cl='clear && ls -l'
+alias lc='clear && ls -l'
+alias cls='clear && ls'
 alias grep='grep --colour=auto'
 alias tf='tail -f'
-alias p='cd ..; clear; ls -l'
+alias p='cd .. && clear && ls -l'
+alias s='ssh'
 alias ssh8='ssh -L 8888:localhost:8888'
 alias rp='cd $(realpath .)'
 alias shortps1='export PROMPT_DIRTRIM=3'
-alias condainit='source ~/scratch/miniconda3/etc/profile.d/conda.sh && conda activate'
+alias hex='printf "0x%x\n"'
+alias dec='printf "%d\n"'
+alias now='echo $(date +"%Y%m%d-%H%M%S")'
+alias hostnow='echo $HOST-$(date +"%Y%m%d-%H%M%S")'
 
-test -s .bashrc.machine && . .bashrc.machine || true
-
-if [ $HOSTNAME ]; then
-export PS1='\[\033[01;30m\]${HOSTNAME%%.*}\[\033[00m\]:\[\033[01;38;5;208m\]\w\[\033[00m\]\$ '
+if [ ${DOCKERIMG} ]; then
+export PS1='\[\033[01;31m\]${HOSTNAME}\[\033[00m\]:\[\033[01;38;5;208m\]\w\[\033[00m\]\$ '
 else
 export PS1='\[\033[01;32m\]\h\[\033[00m\]:\[\033[01;38;5;208m\]\w\[\033[00m\]\$ '
 fi
@@ -73,6 +82,19 @@ while [[ 1 ]]; do
   echo $s "secs"
   sleep 1
   s=$[$s+1];
+done
+}
+
+coloransi() {
+PREFIX='\033[01;'
+RESET='\033[0m'
+for i in {30..37}
+do
+  for j in {40..47}
+  do
+    echo -en "${PREFIX}${i};${j}m ${i};${j} ${RESET}"
+  done
+  echo
 done
 }
 
@@ -102,6 +124,39 @@ printf "\n";
 }'
 }
 
+bin() {
+  if [[ $1 == 0x* ]]; then
+    hex="${1#0x}"
+    dec=$((16#$hex))
+  else
+    dec=$1
+  fi
+  binary=$(echo "obase=2; $dec" | bc)
+
+  len=${#binary}
+  mod=$((len % 4))
+  if [ $mod -ne 0 ]; then
+    for ((i=0; i<4-mod; i++)); do
+      binary="0$binary"
+    done
+  fi
+  echo $binary | sed 's/\(....\)/\1 /g'
+}
+
+bdf() {
+  if [ "$1" ]; then
+    local gpu=$(($1 + 1))
+    lspci -d 10de: | awk '{print $1}' | sed -n ${gpu}p
+  else
+    lspci -d 10de: | awk '{print $1}'
+  fi
+}
+
+bar0() {
+  region=$(lspci -vv -d 10de: | grep 'Region 0' | awk '{print $5}')
+  printf "0x%s\n" $region
+}
+
 gi() {
   if [[ $1 == "tpush" ]]; then
     git push "${@:2}"
@@ -109,4 +164,31 @@ gi() {
     git pull "${@:2}"
   fi
 }
+
+howlong() {
+  dir="."
+  if [ -n "$1" ]; then
+    dir=$1/*
+  fi
+  if [ -n "$2" ]; then
+    dir=$1/*.$2
+  fi
+  file0=$(ls -t  $dir | tail -n 1)
+  file1=$(ls -tr $dir | tail -n 1)
+  time0=$(stat -c %Y "$file0")
+  time1=$(stat -c %Y "$file1")
+  time01=$((time1 - time0))
+  echo "$(date -d@$time01 -u +%H:%M:%S)"
+}
+
+title() {
+  CHIP=$(gpu chip 0 2>/dev/null)
+  if [ -z "$CHIP" ]; then
+    echo -ne "\033]0;${HOST} ${ARCH}\007"
+  else
+    echo -ne "\033]0;${HOST} $CHIP ${ARCH}\007"
+  fi
+}
+
+title
 
